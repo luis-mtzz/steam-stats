@@ -18,7 +18,7 @@ class SteamAppServices {
             console.error("Error grabbing app list: ", response.error);
         }
         const filterAppList = (response) => {
-            const appList = response.applist.apps;
+            const appList = response.data.applist.apps;
 
             const filteredApps = appList.map((app) => ({
                 appid: app.appid,

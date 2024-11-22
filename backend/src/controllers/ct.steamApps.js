@@ -1,13 +1,14 @@
-const steamAppServices = rquire("./../services/sv.steamApps");
+const steamAppServices = require("./../services/sv.steamApps");
 const logExceptions = require("./../services/sv.logExceptions");
 
 class SteamAppController {
     async getAppList() {
         try {
-            apps = await steamAppServices.getAppList();
+            const apps = await steamAppServices.getAppList();
+            console.log(apps);
             return apps;
         } catch (ex) {
-            logExceptions.log(ex, req);
+            logExceptions.log(ex);
             throw ex;
         }
     }

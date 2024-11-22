@@ -1,13 +1,24 @@
-const redisServices = requre("./../services/sv.");
+const redisServices = require("./../services/sv.redis");
 const logExceptions = require("./../services/sv.logExceptions");
 
 class RedisController {
     async uploadAppList(req) {
         try {
-            await redisServices.uploadAppList(req);
+            return await redisServices.uploadAppList(req);
         } catch (ex) {
-            logExceptions(ex, req);
+            logExceptions.log(ex, req);
+            throw ex;
+        }
+    }
+
+    async searchAppList(req) {
+        try {
+            return await redisServices.searchAppList(req);
+        } catch (ex) {
+            logExceptions.log(ex, req);
             throw ex;
         }
     }
 }
+
+module.exports = new RedisController();

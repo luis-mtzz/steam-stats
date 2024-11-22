@@ -8,8 +8,8 @@ class UserServives {
         this.token = config.steam.api_key;
     }
 
-    async getSteamIDFromVanity(token = this.token, vanityurl) {
-        let url = `https://api.steampowered.com/ISteamUser/ResolveVanityURL/v1/?key=${token}&vanityurl=${vanityurl}`;
+    async getSteamIDFromVanity(vanityurl) {
+        let url = `https://api.steampowered.com/ISteamUser/ResolveVanityURL/v1/?key=${this.token}&vanityurl=${vanityurl}`;
         let response = await this.httpClient.submitRequest(
             url,
             UserServives.GET,
@@ -18,11 +18,11 @@ class UserServives {
             console.error("Error Grabbing SteamID: ", response.error);
         }
         return {
-            steamID: response.response.steamid,
+            steamID: response.data.response.steamid,
         };
     }
 
-    async getPlayerSummaries(token = this.token, steamid) {
+    async getPlayerSummaries(steamid, token = this.token) {
         let url = `https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key=${token}&steamids=${steamid}`;
         let response = await this.httpClient.submitRequest(
             url,
@@ -32,16 +32,18 @@ class UserServives {
             console.error("Error grabbing player summary: ", error);
         }
         return {
-            steamID: response.response.steamid,
-            personaName: response.response.personaname,
-            profileURL: response.response.personaname,
-            avatarFull: response.response.avatarfull,
-            timecreated: response.response.timecreated,
+            steamID: response.data.response.players[0].steamid,
+            personaName: response.data.response.players[0].personaname,
+            profileURL: response.data.response.players[0].profileurl,
+            avatarFull: response.data.response.players[0].avatarfull,
+            timecreated: new Date(
+                response.data.response.players[0].timecreated * 1000,
+            ).toLocaleDateString("en-US"),
         };
     }
 
-    async getUserOwnedGames(token = this.token, steamid) {
-        let url = `http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=${token}&steamid=${steamid}`;
+    async getUserOwnedGames(steamid) {
+        let url = `http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=${this.token}&steamid=${steamid}`;
         let response = await this.httpClient.submitRequest(
             url,
             UserServives.GET,
@@ -50,7 +52,7 @@ class UserServives {
             console.error("Error grabbing owned games: ", error);
         }
         const filterGameData = (response) => {
-            const games = response.response.games;
+            const games = response.data.response.games;
 
             const filteredGames = games.map((game) => ({
                 appid: game.appid,
@@ -63,7 +65,7 @@ class UserServives {
         return result;
     }
 
-    async getUserRecentlyPlayedGames(token = this.token, steamid) {
+    async getUserRecentlyPlayedGames(steamid, token = this.token) {
         let url = `http://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v0001/?key=${token}&steamid=${steamid}`;
         let response = await this.httpClient.submitRequest(
             url,
@@ -73,6 +75,7 @@ class UserServives {
             console.error("Error grabbing owned games: ", error);
         }
         const filterGameData = (response) => {
+            console.log(response);
             const games = response.response.games;
 
             const filteredGames = games.map((game) => ({
