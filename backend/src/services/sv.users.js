@@ -31,6 +31,7 @@ class UserServives {
         if (!response.ok) {
             console.error("Error grabbing player summary: ", error);
         }
+        console.log(response.data.response.players[0]);
         return {
             steamID: response.data.response.players[0].steamid,
             personaName: response.data.response.players[0].personaname,

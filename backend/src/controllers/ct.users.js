@@ -38,6 +38,23 @@ class UserController {
             throw ex;
         }
     }
+
+    async getUserRecentlyPlayedGames(req) {
+        try {
+            const recentGames =
+                await userServices.getUserRecentlyPlayedGames(req);
+            let results = {};
+            for (const game of recentGames) {
+                let gameName = await redisController.searchAppList(game.appid);
+                results[`${game.appid}`] = {
+                    gameName: gameName,
+                };
+            }
+        } catch (ex) {
+            logExceptions.log(ex, req);
+            throw ex;
+        }
+    }
 }
 
 module.exports = new UserController();
