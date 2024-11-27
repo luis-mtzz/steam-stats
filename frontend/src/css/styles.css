@@ -1,3 +1,23 @@
 @tailwind base;
 @tailwind utilities;
 @tailwind components;
+
+:root {
+    --charcoal: #333333;
+    --cornsilk-tres: #cdc8b1;
+    --deep-space-sparkle: #4a646c;
+    --dim-gray: #696969;
+    --ravenclaw-blue: #111c40;
+}
+
+body {
+    background-color: var(--dim-gray);
+    font-family: -apple-system;
+    padding: 20px;
+}
+
+.steamProfile {
+    background-color: var(--charcoal);
+    padding: 20px;
+    box-shadow: 5px 10px 10px 5px black;
+}
